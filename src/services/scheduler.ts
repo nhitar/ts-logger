@@ -1,9 +1,10 @@
-import { IntervalError, NameError } from '../common/errors';
+import { IntervalError } from '../common/errors/intervalError';
+import { TaskNameError } from '../common/errors/taskNameError';
 import { log } from '../core/logger';
 
 export function scheduleTask(name: string, interval: number, task: Function) {
   if (name === '') {
-    throw new NameError('Task name cannot be empty.');
+    throw new TaskNameError('Task name cannot be empty.');
   }
 
   if (interval <= 0) {
