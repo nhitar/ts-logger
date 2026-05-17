@@ -5,6 +5,10 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "start": "node scheduler.js"
+    "start": "npx tsc && node dist/main.js"
+  },
+  "devDependencies": {
+    "@types/node": "^25.8.0",
+    "typescript": "^6.0.3"
   }
 }
