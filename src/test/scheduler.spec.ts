@@ -1,24 +1,26 @@
-import { scheduleTask } from "../services/scheduler";
+import { scheduleTask } from '../services/scheduler';
 
-describe("Scheduler", () => {
+describe('Scheduler', () => {
   let consoleSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    consoleSpy = jest.spyOn(console, "log").mockImplementation();
+    consoleSpy = jest.spyOn(console, 'log').mockImplementation();
     jest.useFakeTimers();
   });
 
-  it("should schedule task", () => {
+  it('should schedule task', () => {
     const taskSpy = jest.fn();
 
-    const interval = scheduleTask("run logger", 3000, taskSpy);
+    const interval = scheduleTask('run logger', 3000, taskSpy);
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[js-logger] INFO')
+      expect.stringContaining('[js-logger] INFO'),
     );
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Task "run logger" with interval 3000 msec started.')
+      expect.stringContaining(
+        'Task "run logger" with interval 3000 msec started.',
+      ),
     );
 
     expect(taskSpy).not.toHaveBeenCalled();
