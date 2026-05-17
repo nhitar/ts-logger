@@ -1,10 +1,11 @@
 import { config } from "./core/config";
-import { log, scheduleTask } from "./services/scheduler";
+import { log } from "./core/logger";
+import { scheduleTask } from "./services/scheduler";
 
 function initScript() {
-  log("info", "scheduler started.");
+  log("INFO", "Scheduler started.");
   scheduleTask("run logger", config.intervalMsec, () => {
-    log("info", "running.");
+    log("INFO", "Running.");
   });
 }
 

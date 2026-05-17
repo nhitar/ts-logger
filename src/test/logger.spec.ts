@@ -10,11 +10,14 @@ describe("Logger", () => {
   
   it("should log message", () => {
     const log = createLogger()
-    log("info", "Test message.");
+    log("INFO", "Test message.");
     expect(consoleSpy).toHaveBeenCalled();
+
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[js-logger info]"),
-      expect.any(String),
+      expect.stringContaining("[js-logger] INFO")
+    );
+
+    expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining("Test message.")
     );
   });
@@ -23,12 +26,16 @@ describe("Logger", () => {
     const log = createLogger()
     let task = "run logger";
     const interval = scheduleTask(task, 3000, () => {
-        log("info", "Test message.");
-      });
+      log("INFO", "Test message.");
+    });
+
     expect(consoleSpy).toHaveBeenCalled();
+
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[js-logger info]"),
-      expect.any(String),
+      expect.stringContaining("[js-logger] INFO")
+    );
+    
+    expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining(`Task "${task}"`)
     );
     clearInterval(interval);

@@ -1,6 +1,9 @@
+import { randomUUID, UUID } from "node:crypto";
 import { config } from "./config";
 
-type LoggerLevels = "info" | "warn" | "error" | "debug" | "trace";
+type LoggerLevels = "INFO" | "WARN" | "ERROR" | "DEBUG" | "TRACE";
+
+export const log = createLogger();
 
 function colourOutput(message: string, colour: string) {
   switch(colour) {
@@ -14,10 +17,11 @@ function colourOutput(message: string, colour: string) {
 }
 
 export function createLogger() {
-  return function(level: LoggerLevels = "info", message: string) {
-    const timestamp: string = new Date().toISOString().split('.')[0];
-    const output = `[${config.appName} ${level}] ${timestamp} ${message}`;
-    if (level === "warn" || level === "error") {
+  return function(level: LoggerLevels = "INFO", message: string) {
+    const currentDate: string = new Date().toISOString().split('.')[0];
+    const uuid: UUID = randomUUID();
+    const output: string = `[${config.appName}] ${level} ${uuid.slice(0, 8)} ${currentDate} ${message}`;
+    if (level === "WARN" || level === "ERROR") {
       console.log(colourOutput(output, "red"));
     } else {
       console.log(colourOutput(output, "green"));
