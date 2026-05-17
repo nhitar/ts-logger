@@ -18,14 +18,20 @@ function colourOutput(message: string, colour: string) {
 }
 
 export function createLogger() {
-  return function (level: LoggerLevels = 'INFO', message: string) {
+  return function (
+    level: LoggerLevels = 'INFO',
+    message: string,
+    requestId: UUID = randomUUID(),
+  ) {
     const currentDate: string = new Date().toISOString().split('.')[0];
-    const uuid: UUID = randomUUID();
-    const output: string = `[${config.appName}] ${level} ${uuid.slice(0, 8)} ${currentDate} ${message}`;
+    const output: string = `[${config.appName}] ${level} ${requestId.slice(0, 8)} ${currentDate} ${message}`;
+
     if (level === 'WARN' || level === 'ERROR') {
       console.log(colourOutput(output, 'red'));
     } else {
       console.log(colourOutput(output, 'green'));
     }
+
+    return requestId;
   };
 }
