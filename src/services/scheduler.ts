@@ -1,8 +1,8 @@
-import { createLogger } from "../core/logger.js";
+import { createLogger } from "../core/logger";
 
 export const log = createLogger();
 
 export function scheduleTask(name: string, interval: number, task: Function) {
-  log(`Task "${name}" with interval ${interval} msec started.`);
-  setInterval(task, interval);
+  log("info", `Task "${name}" with interval ${interval} msec started.`);
+  return setInterval(task, interval);
 }
