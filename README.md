@@ -18,6 +18,24 @@
 
 6. `test/` - директория с `Jest` тестами.
 
+### Установка и запуск
+
+Клонирование репозитория:
+
+```bash
+git clone https://github.com/nhitar/ts-logger.git
+
+cd ts-logger
+```
+
+Установка зависимостей и запуск приложения:
+
+```bash
+npm i
+
+npm run start
+```
+
 ### Демонстация работы
 
 ```bash
@@ -26,9 +44,10 @@ npm run start
 > js-logger@1.0.0 start
 > npx tsc && node dist/main.js
 
-[js-logger] scheduler.js file started.
-[js-logger] Task "run logger" with interval 10000 msec started.
-[js-logger] running.
+[js-logger] INFO a154635c 2026-05-17T16:45:00 Scheduler started.
+[js-logger] INFO 8af6b84b 2026-05-17T16:45:00 Task "run logger" with interval 10000 msec started.
+[js-logger] INFO dcc7b601 2026-05-17T16:45:10 Running.
+[js-logger] INFO dcc7b601 2026-05-17T16:45:20 Running.
 ```
 
 ```bash
