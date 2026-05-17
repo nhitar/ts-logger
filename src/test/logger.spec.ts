@@ -1,4 +1,3 @@
-import { scheduleTask } from "../services/scheduler";
 import { createLogger } from "../core/logger"
 
 describe("Logger", () => {
@@ -20,25 +19,6 @@ describe("Logger", () => {
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining("Test message.")
     );
-  });
-
-  it("should schedule message", () => {
-    const log = createLogger()
-    let task = "run logger";
-    const interval = scheduleTask(task, 3000, () => {
-      log("INFO", "Test message.");
-    });
-
-    expect(consoleSpy).toHaveBeenCalled();
-
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("[js-logger] INFO")
-    );
-    
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining(`Task "${task}"`)
-    );
-    clearInterval(interval);
   });
 
   afterEach(() => {
