@@ -3,12 +3,32 @@
   "version": "1.0.0",
   "description": "JS logger app.",
   "license": "ISC",
-  "type": "module",
   "scripts": {
-    "start": "npx tsc && node dist/main.js"
+    "start": "npx tsc && node dist/main.js",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.8.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.9",
     "typescript": "^6.0.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }
