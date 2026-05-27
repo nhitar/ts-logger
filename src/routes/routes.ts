@@ -13,4 +13,6 @@ router.post('/currencies', currencyService.createCurrency);
 router.put('/currencies/:id', currencyService.updateCurrency);
 router.delete('/currencies/:id', currencyService.deleteCurrency);
 
+router.get('/price', currencyService.getTickerPrice);
+
 export default router;
