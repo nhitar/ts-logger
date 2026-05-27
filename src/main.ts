@@ -31,8 +31,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/', routes);
 
 const PORT = 3000;
-const server = app.listen(PORT, async () => {
-  log('INFO', `Server running on http://localhost:${PORT}`);
-});
+const server = app.listen(PORT);
 
 export { app, server };

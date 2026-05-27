@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
 
-interface Currency {
-  id: number;
-  name: string;
-  ticker: number;
-}
+import { Currency } from '../common/interfaces/currencyInterface';
 
 const currencies: Currency[] = [];
 
@@ -12,7 +8,7 @@ export const getStatus = async (_: Request, res: Response) => {
   res.status(200).json({ message: 'ok' });
 };
 
-export const getAllCurrency = async (_: Request, res: Response) => {
+export const getAllCurrencies = async (_: Request, res: Response) => {
   res.status(200).json(currencies);
 };
 

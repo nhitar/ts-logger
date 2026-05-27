@@ -9,7 +9,7 @@ describe('Status endpoint', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  afterEach((done) => {
+  afterAll((done) => {
     server.close(done);
   });
 });
