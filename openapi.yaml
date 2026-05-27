@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  title: TS test project
+  description: API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /status:
+    get:
+      summary: Доступность сервера
+      security: []
+      responses:
+        '200':
+          description: Сервер доступен
+
+  /currencies:
+    get:
+      summary: Список валют
+      security: []
+      responses:
+        '200':
+          description: Список валют
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
+
+    post:
+      summary: Создание валюты
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCurrency'
+      responses:
+        '201':
+          description: Валюта создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '400':
+          description: Неверные данные
+
+  /currencies/{id}:
+    get:
+      summary: Получение одной валюты
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Данные валюты
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '404':
+          description: Валюта не найдена
+
+    put:
+      summary: Обновление валюты
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCurrency'
+      responses:
+        '200':
+          description: Валюта обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+        '400':
+          description: Неверные данные
+        '404':
+          description: Валюта не найдена
+    
+    delete:
+      summary: Удаление валюты
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Валюта удалена
+        '400':
+          description: Неверные данные
+        '404':
+          description: Валюта не найдена
+
+  /price:
+    get:
+      summary: Получение цены валюты от внешнего API
+      security: []
+      parameters:
+        - name: ticker
+          in: query
+          required: true
+          schema:
+           type: string
+      responses:
+        '200':
+          description: Данные валюты
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalCurrency'
+        '422':
+          description: Неверный формат полученных данных
+        '503':
+          description: Внешний API недоступен
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Currency:
+      type: object
+      required: [id, name, ticker, price]
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        ticker:
+          type: string
+        price:
+          type: number
+
+    ExternalCurrency:
+      type: object
+      required: [symbol, price]
+      properties:
+        symbol:
+          type: string
+        price:
+          type: string
+
+    CreateCurrency:
+      type: object
+      required: [name, ticker, price]
+      properties:
+        name:
+          type: string
+        ticker:
+          type: string
+        price:
+          type: number
+
+    UpdateCurrency:
+      type: object
+      properties:
+        name:
+          type: string
+        ticker:
+          type: string
+        price:
+          type: number
