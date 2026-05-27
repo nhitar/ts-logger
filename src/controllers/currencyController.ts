@@ -28,6 +28,7 @@ export const createCurrency = async (req: Request, res: Response) => {
       id: currencies.length,
       name: req.body.name,
       ticker: req.body.ticker,
+      price: req.body.price,
     };
     currencies.push(newCurrency);
     res.status(201).json(newCurrency);
@@ -49,6 +50,7 @@ export const updateCurrency = async (req: Request, res: Response) => {
       id: id,
       name: req.body.name,
       ticker: req.body.ticker,
+      price: req.body.price,
     };
 
     currencies[index] = updatedCurrency;

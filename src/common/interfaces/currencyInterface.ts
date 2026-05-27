@@ -1,5 +1,6 @@
 export interface Currency {
   id: number;
   name: string;
-  ticker: number;
+  ticker: string;
+  price: number;
 }

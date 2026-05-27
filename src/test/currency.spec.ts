@@ -6,11 +6,13 @@ describe('CurrencyService', () => {
   const currencies = [
     {
       name: 'ticker-1',
-      ticker: 10,
+      ticker: 'ABC',
+      price: 10,
     },
     {
       name: 'ticker-2',
-      ticker: 20,
+      ticker: 'DEF',
+      price: 20,
     },
   ];
 
@@ -29,8 +31,8 @@ describe('CurrencyService', () => {
     const response = await request(app).get('/currencies');
 
     expect(response.body).toMatchObject([
-      { name: 'ticker-1', ticker: 10 },
-      { name: 'ticker-2', ticker: 20 },
+      { name: 'ticker-1', ticker: 'ABC', price: 10 },
+      { name: 'ticker-2', ticker: 'DEF', price: 20 },
     ]);
     expect(response.statusCode).toBe(200);
   });
@@ -41,25 +43,27 @@ describe('CurrencyService', () => {
     expect(response.body).toMatchObject({
       id: 0,
       name: 'ticker-1',
-      ticker: 10,
+      ticker: 'ABC',
+      price: 10,
     });
     expect(response.statusCode).toBe(200);
   });
 
   it('should create currency', async () => {
-    const newCurrency = { name: 'ticker-3', ticker: 30 };
+    const newCurrency = { name: 'ticker-3', ticker: 'GHI', price: 30 };
     const response = await request(app).post('/currencies').send(newCurrency);
 
     expect(response.body).toMatchObject({
       id: 2,
       name: 'ticker-3',
-      ticker: 30,
+      ticker: 'GHI',
+      price: 30,
     });
     expect(response.statusCode).toBe(201);
   });
 
   it('should update currency', async () => {
-    const updatedCurrency = { name: 'ticker-1', ticker: 100 };
+    const updatedCurrency = { name: 'ticker-1', ticker: 'ABC', price: 100 };
     const response = await request(app)
       .put('/currencies/0')
       .send(updatedCurrency);
@@ -67,7 +71,8 @@ describe('CurrencyService', () => {
     expect(response.body).toMatchObject({
       id: 0,
       name: 'ticker-1',
-      ticker: 100,
+      ticker: 'ABC',
+      price: 100,
     });
     expect(response.statusCode).toBe(200);
   });
