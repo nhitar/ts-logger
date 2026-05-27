@@ -25,6 +25,9 @@ import { scheduleTask } from './services/scheduler';
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/', routes);
 
 const PORT = 3000;
