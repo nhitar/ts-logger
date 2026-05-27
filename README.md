@@ -1,4 +1,4 @@
-# TS Logger
+# TS currency app
 
 ### Описание
 
@@ -55,5 +55,6 @@ npm run test
 Авторизация осуществляется через `POST /auth/login`.
 
 **email**: user@example.com
+
 **password**: password
 
