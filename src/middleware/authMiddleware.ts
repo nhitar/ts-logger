@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const jwtSecret = process.env.JWT_SECRET || 'secret-key';
-
 interface AuthRequest extends Request {
   user?: JwtPayload;
 }
@@ -18,7 +16,10 @@ export function authMiddleware(
       return res.status(401).json({ message: 'Unauthorized.' });
     }
 
-    const decoded: JwtPayload = jwt.verify(token, jwtSecret) as JwtPayload;
+    const decoded: JwtPayload = jwt.verify(
+      token,
+      process.env.JWT_SECRET || 'secret-key',
+    ) as JwtPayload;
     req.user = decoded;
     next();
   } catch {
