@@ -6,6 +6,31 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
+  /auth/login:
+    post:
+      summary: Авторизация
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignIn'
+      responses:
+        '200':
+          description: Токен авторизации
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+        '401':
+          description: Неверная почта или пароль
+        '500':
+          description: Ошибка сервера
+
   /status:
     get:
       summary: Доступность сервера
@@ -17,7 +42,8 @@ paths:
   /currencies:
     get:
       summary: Список валют
-      security: []
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Список валют
@@ -30,7 +56,8 @@ paths:
 
     post:
       summary: Создание валюты
-      security: []
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -50,7 +77,8 @@ paths:
   /currencies/{id}:
     get:
       summary: Получение одной валюты
-      security: []
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -69,7 +97,8 @@ paths:
 
     put:
       summary: Обновление валюты
-      security: []
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -96,7 +125,8 @@ paths:
     
     delete:
       summary: Удаление валюты
-      security: []
+      security:
+        - bearerAuth: []
       parameters:
         - name: id
           in: path
@@ -114,7 +144,8 @@ paths:
   /price:
     get:
       summary: Получение цены валюты от внешнего API
-      security: []
+      security:
+        - bearerAuth: []
       parameters:
         - name: ticker
           in: query
@@ -140,6 +171,15 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    SignIn:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
     Currency:
       type: object
       required: [id, name, ticker, price]

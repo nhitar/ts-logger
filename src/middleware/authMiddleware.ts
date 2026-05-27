@@ -13,7 +13,7 @@ export function authMiddleware(
   try {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized.' });
+      return res.status(403).json({ message: 'Forbidden.' });
     }
 
     const decoded: JwtPayload = jwt.verify(
@@ -23,6 +23,6 @@ export function authMiddleware(
     req.user = decoded;
     next();
   } catch {
-    return res.status(403).json({ message: 'Forbidden.' });
+    return res.status(401).json({ message: 'Unauthorized.' });
   }
 }

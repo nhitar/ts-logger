@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx tsc && node dist/main.js",
     "format": "prettier --write src --cache",
-    "test": "jest"
+    "test": "jest --runInBand"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
