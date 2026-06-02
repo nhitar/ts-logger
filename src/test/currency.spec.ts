@@ -1,9 +1,10 @@
 import request from 'supertest';
 
-import { app, server } from '../main';
+import { app, databaseReady, server } from '../main';
 
 describe('CurrencyService', () => {
   let authToken = '';
+  let allCurrencies: any[] = [];
 
   const currencies = [
     {
@@ -19,6 +20,8 @@ describe('CurrencyService', () => {
   ];
 
   beforeAll(async () => {
+    await databaseReady;
+
     const user = {
       email: 'user@example.com',
       password: 'password',
@@ -44,6 +47,12 @@ describe('CurrencyService', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send(currencies[i]);
     }
+
+    const response = await request(app)
+      .get('/currencies')
+      .set('Authorization', `Bearer ${authToken}`);
+
+    allCurrencies = response.body;
   });
 
   it('should return all currencies', async () => {
@@ -59,16 +68,21 @@ describe('CurrencyService', () => {
   });
 
   it('should return currency by id', async () => {
+    const targetCurrency = allCurrencies.find(
+      (currency: { ticker: string }) => currency.ticker === 'ABC',
+    );
+
     const response = await request(app)
-      .get('/currencies/0')
+      .get(`/currencies/${targetCurrency.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
-    expect(response.body).toMatchObject({
-      id: 0,
-      name: 'ticker-1',
-      ticker: 'ABC',
-      price: 10,
-    });
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        name: 'ticker-1',
+        ticker: 'ABC',
+        price: 10,
+      }),
+    );
     expect(response.statusCode).toBe(200);
   });
 
@@ -80,36 +94,66 @@ describe('CurrencyService', () => {
       .send(newCurrency);
 
     expect(response.body).toMatchObject({
-      id: 2,
       name: 'ticker-3',
       ticker: 'GHI',
       price: 30,
     });
     expect(response.statusCode).toBe(201);
+
+    const updatedCurrencies = await request(app)
+      .get('/currencies')
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(updatedCurrencies.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: 'ticker-3', ticker: 'GHI', price: 30 }),
+      ]),
+    );
   });
 
   it('should update currency', async () => {
+    const targetCurrency = allCurrencies.find(
+      (currency: { ticker: string }) => currency.ticker === 'ABC',
+    );
+
     const updatedCurrency = { name: 'ticker-1', ticker: 'ABC', price: 100 };
     const response = await request(app)
-      .put('/currencies/0')
+      .put(`/currencies/${targetCurrency.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedCurrency);
 
     expect(response.body).toMatchObject({
-      id: 0,
       name: 'ticker-1',
       ticker: 'ABC',
       price: 100,
     });
     expect(response.statusCode).toBe(200);
+
+    const updated = await request(app)
+      .get(`/currencies/${targetCurrency.id}`)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(updated.body).toEqual(
+      expect.objectContaining({ name: 'ticker-1', ticker: 'ABC', price: 100 }),
+    );
   });
 
   it('should delete currency', async () => {
+    const targetCurrency = allCurrencies.find(
+      (currency: { ticker: string }) => currency.ticker === 'ABC',
+    );
+
     const response = await request(app)
-      .delete('/currencies/0')
+      .delete(`/currencies/${targetCurrency.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(204);
+
+    const deleted = await request(app)
+      .get(`/currencies/${targetCurrency.id}`)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(deleted.statusCode).toBe(404);
   });
 
   afterAll((done) => {
