@@ -7,10 +7,6 @@ import { log } from '../core/logger';
 
 const currencies: Currency[] = [];
 
-export const getStatus = async (_: Request, res: Response) => {
-  res.status(200).json({ message: 'ok' });
-};
-
 export const getAllCurrencies = async (_: Request, res: Response) => {
   res.status(200).json(currencies);
 };
