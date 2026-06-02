@@ -9,26 +9,38 @@ const router = express.Router();
 
 router.post('/auth/login', authController.login);
 
-router.get('/status', statusController.getStatus);
+router.get('/status', statusController.getStatusController);
 
-router.get('/currencies', authMiddleware, currencyController.getAllCurrencies);
+router.get(
+  '/currencies',
+  authMiddleware,
+  currencyController.getAllCurrenciesController,
+);
 router.get(
   '/currencies/:id',
   authMiddleware,
-  currencyController.getCurrencyById,
+  currencyController.getCurrencyByIdController,
 );
-router.post('/currencies', authMiddleware, currencyController.createCurrency);
+router.post(
+  '/currencies',
+  authMiddleware,
+  currencyController.createCurrencyController,
+);
 router.put(
   '/currencies/:id',
   authMiddleware,
-  currencyController.updateCurrency,
+  currencyController.updateCurrencyController,
 );
 router.delete(
   '/currencies/:id',
   authMiddleware,
-  currencyController.deleteCurrency,
+  currencyController.deleteCurrencyController,
 );
 
-router.get('/price', authMiddleware, currencyController.getTickerPrice);
+router.get(
+  '/price',
+  authMiddleware,
+  currencyController.getTickerPriceController,
+);
 
 export default router;

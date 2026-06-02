@@ -4,16 +4,19 @@ import { Request, Response } from 'express';
 import { ExternalApiFieldsError } from '../common/errors/externalApiFieldsError';
 import { Currency } from '../common/interfaces/currencyInterface';
 import { log } from '../core/logger';
+import * as currencyService from '../services/currencyService';
 
-const currencies: Currency[] = [];
-
-export const getAllCurrencies = async (_: Request, res: Response) => {
+export const getAllCurrenciesController = async (_: Request, res: Response) => {
+  const currencies = await currencyService.getAllCurrencies();
   res.status(200).json(currencies);
 };
 
-export const getCurrencyById = async (req: Request, res: Response) => {
+export const getCurrencyByIdController = async (
+  req: Request,
+  res: Response,
+) => {
   const id = Number(req.params.id);
-  const currency = currencies.find((currency) => currency.id === id);
+  const currency = await currencyService.getCurrencyById(id);
   if (!currency) {
     return res.status(404).json({ message: 'Currency not found.' });
   }
@@ -21,69 +24,52 @@ export const getCurrencyById = async (req: Request, res: Response) => {
   res.status(200).json(currency);
 };
 
-export const createCurrency = async (req: Request, res: Response) => {
+export const createCurrencyController = async (req: Request, res: Response) => {
   try {
     const newCurrency: Currency = {
-      id: currencies.length,
       name: req.body.name,
       ticker: req.body.ticker,
       price: req.body.price,
     };
-    currencies.push(newCurrency);
+    await currencyService.createCurrency(newCurrency);
     res.status(201).json(newCurrency);
   } catch {
     res.status(400).json({ message: 'Bad request for currency create.' });
   }
 };
 
-export const updateCurrency = async (req: Request, res: Response) => {
+export const updateCurrencyController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const index = currencies.findIndex((currency) => currency.id === id);
-
-    if (index === -1) {
-      return res.status(404).json({ message: 'Currency not found.' });
-    }
-
     const updatedCurrency: Currency = {
-      id: id,
       name: req.body.name,
       ticker: req.body.ticker,
       price: req.body.price,
     };
-
-    currencies[index] = updatedCurrency;
+    await currencyService.updateCurrency(id, updatedCurrency);
     res.status(200).json(updatedCurrency);
   } catch {
     res.status(400).json({ message: 'Bad request for update currency.' });
   }
 };
 
-export const deleteCurrency = async (req: Request, res: Response) => {
+export const deleteCurrencyController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const index = currencies.findIndex((currency) => currency.id === id);
-
-    if (index === -1) {
-      return res.status(404).json({ message: 'Currency not found.' });
-    }
-
-    currencies.splice(index, 1);
+    await currencyService.deleteCurrency(id);
     res.status(204).json({ message: 'Currency deleted.' });
   } catch {
     res.status(400).json({ message: 'Bad update currency request.' });
   }
 };
 
-export const getTickerPrice = async (req: Request, res: Response) => {
+export const getTickerPriceController = async (req: Request, res: Response) => {
   const ticker = String(req.query.ticker);
-  if (!ticker) {
+  if (ticker === undefined) {
     return res.status(400).json({ message: 'Ticker is missing in query.' });
   }
 
-  const currency = currencies.find(
-    (currency) => currency.ticker.toLowerCase() === ticker.toLowerCase(),
-  );
+  const currency = await currencyService.getCurrencyByTicker(ticker);
   if (!currency) {
     return res.status(404).json({
       message: `Currency with ticker ${ticker} is missing in storage.`,
