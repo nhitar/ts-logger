@@ -1,4 +1,5 @@
 import { Currency } from '../common/interfaces/currencyInterface';
+import { DatabaseResponse } from '../common/interfaces/databaseResponseInterface';
 import database from '../database/database';
 
 export const getAllCurrencies = async () => {
@@ -16,19 +17,25 @@ export const getCurrencyByTicker = async (ticker: string) => {
 };
 
 export const createCurrency = async (currency: Currency) => {
-  await database.run(
+  const response: DatabaseResponse = await database.run(
     'INSERT INTO currencies (name, ticker, price) VALUES (?, ?, ?)',
     [currency.name, currency.ticker, currency.price],
   );
+  return response.lastID;
 };
 
 export const updateCurrency = async (id: number, currency: Currency) => {
-  await database.run(
+  const response: DatabaseResponse = await database.run(
     'UPDATE currencies SET name = ?, ticker = ?, price = ? WHERE id = ?',
     [currency.name, currency.ticker, currency.price, id],
   );
+  return response.changes;
 };
 
 export const deleteCurrency = async (id: number) => {
-  await database.run('DELETE FROM currencies WHERE id = ?', [id]);
+  const response: DatabaseResponse = await database.run(
+    'DELETE FROM currencies WHERE id = ?',
+    [id],
+  );
+  return response.changes;
 };

@@ -1,5 +1,7 @@
 import sqlite3 from 'sqlite3';
 
+import { DatabaseResponse } from '../common/interfaces/databaseResponseInterface';
+
 export class Database {
   databasePath: string;
   db: sqlite3.Database;
@@ -9,19 +11,22 @@ export class Database {
     this.db = new sqlite3.Database(this.databasePath);
   }
 
-  run(request: string, params: unknown[] = []): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      this.db.run(request, params, (err) => {
+  run(request: string, params: unknown[] = []): Promise<DatabaseResponse> {
+    return new Promise<DatabaseResponse>((resolve, reject) => {
+      this.db.run(request, params, function (err) {
         if (err) {
           return reject(err);
         }
-        resolve();
+        resolve({
+          lastID: this.lastID,
+          changes: this.changes,
+        });
       });
     });
   }
 
-  get(request: string, params: unknown[] = []): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
+  get(request: string, params: unknown[] = []): Promise<unknown> {
+    return new Promise<unknown>((resolve, reject) => {
       this.db.get(request, params, (err, row) => {
         if (err) {
           return reject(err);
@@ -31,8 +36,8 @@ export class Database {
     });
   }
 
-  all(request: string, params: unknown[] = []): Promise<any[]> {
-    return new Promise<any[]>((resolve, reject) => {
+  all(request: string, params: unknown[] = []): Promise<unknown[]> {
+    return new Promise<unknown[]>((resolve, reject) => {
       this.db.all(request, params, (err, rows) => {
         if (err) {
           return reject(err);
