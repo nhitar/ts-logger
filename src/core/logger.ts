@@ -9,11 +9,13 @@ export const log = createLogger();
 function colourOutput(message: string, colour: string) {
   switch (colour) {
     case 'red':
-      return `\x1b[31m${message}\x1b[0m`;
+      console.log(`\x1b[31m${message}\x1b[0m`);
+      return;
     case 'green':
-      return `\x1b[32m${message}\x1b[0m`;
+      console.log(`\x1b[32m${message}\x1b[0m`);
+      return;
     default:
-      return message;
+      console.log(message);
   }
 }
 
@@ -27,9 +29,9 @@ export function createLogger() {
     const output: string = `[${config.appName}] ${level} ${requestId.slice(0, 8)} ${currentDate} ${message}`;
 
     if (level === 'WARN' || level === 'ERROR') {
-      console.log(colourOutput(output, 'red'));
+      colourOutput(output, 'red');
     } else {
-      console.log(colourOutput(output, 'green'));
+      colourOutput(output, 'green');
     }
 
     return requestId;
