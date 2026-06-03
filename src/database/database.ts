@@ -1,6 +1,7 @@
 import sqlite3 from 'sqlite3';
 
 import { DatabaseResponse } from '../common/interfaces/databaseResponseInterface';
+import { log } from '../core/logger';
 
 export class Database {
   databasePath: string;
@@ -61,7 +62,8 @@ export class Database {
 
       const isEmpty = await this.get(`SELECT * FROM currencies LIMIT 1`, []);
       if (isEmpty !== undefined) {
-        console.log(
+        log(
+          'INFO',
           'Database already initialized with data. Skipping seeding.',
         );
         await this.run('COMMIT');
@@ -74,10 +76,10 @@ export class Database {
           [`Currency ${i}`, `TICKER-${i}`, 1.0 * i],
         );
       }
-      console.log('Database initialized and seeded with 10 currencies.');
+      log('INFO', 'Database initialized and seeded with 10 currencies.');
       await this.run('COMMIT');
     } catch (error) {
-      console.error('Error initializing database:', error);
+      log('ERROR', `Error initializing database: ${error}`);
       await this.run('ROLLBACK');
       this.db.close();
     }

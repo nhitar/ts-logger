@@ -20,6 +20,7 @@ describe('CurrencyService', () => {
   ];
 
   beforeAll(async () => {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
     await databaseReady;
 
     const user = {
@@ -157,6 +158,7 @@ describe('CurrencyService', () => {
   });
 
   afterAll((done) => {
+    jest.restoreAllMocks();
     server.close(done);
   });
 });

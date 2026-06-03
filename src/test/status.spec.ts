@@ -4,6 +4,7 @@ import { app, databaseReady, server } from '../main';
 
 describe('Status endpoint', () => {
   beforeAll(async () => {
+    jest.spyOn(console, 'log').mockImplementation(() => {});
     await databaseReady;
   });
 
@@ -14,6 +15,7 @@ describe('Status endpoint', () => {
   });
 
   afterAll((done) => {
+    jest.restoreAllMocks();
     server.close(done);
   });
 });
