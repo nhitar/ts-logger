@@ -5,6 +5,7 @@ import { app, databaseReady, server } from '../main';
 describe('CurrencyService', () => {
   let authToken = '';
   let allCurrencies: any[] = [];
+  let databaseDump: any[] = [];
 
   const currencies = [
     {
@@ -19,6 +20,35 @@ describe('CurrencyService', () => {
     },
   ];
 
+  const saveDatabase = async () => {
+    const getAllResponse = await request(app)
+      .get('/currencies')
+      .set('Authorization', `Bearer ${authToken}`);
+    databaseDump = getAllResponse.body;
+  };
+
+  const restoreDatabase = async () => {
+    await clearDatabase();
+    for (const currency of databaseDump) {
+      await request(app)
+        .post('/currencies')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send(currency);
+    }
+  };
+
+  const clearDatabase = async () => {
+    const getAllResponse = await request(app)
+      .get('/currencies')
+      .set('Authorization', `Bearer ${authToken}`);
+
+    for (const currency of getAllResponse.body) {
+      await request(app)
+        .delete(`/currencies/${currency.id}`)
+        .set('Authorization', `Bearer ${authToken}`);
+    }
+  };
+
   beforeAll(async () => {
     jest.spyOn(console, 'log').mockImplementation(() => {});
     await databaseReady;
@@ -30,17 +60,12 @@ describe('CurrencyService', () => {
 
     const response = await request(app).post('/auth/login').send(user);
     authToken = response.body.token;
+
+    await saveDatabase();
   });
 
   beforeEach(async () => {
-    const getAllResponse = await request(app)
-      .get('/currencies')
-      .set('Authorization', `Bearer ${authToken}`);
-    for (const currency of getAllResponse.body) {
-      await request(app)
-        .delete(`/currencies/${currency.id}`)
-        .set('Authorization', `Bearer ${authToken}`);
-    }
+    await clearDatabase();
 
     for (let i = 0; i < currencies.length; ++i) {
       await request(app)
@@ -157,8 +182,9 @@ describe('CurrencyService', () => {
     expect(deleted.statusCode).toBe(404);
   });
 
-  afterAll((done) => {
+  afterAll(async () => {
     jest.restoreAllMocks();
-    server.close(done);
+    await restoreDatabase();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
   });
 });
