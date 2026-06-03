@@ -77,7 +77,7 @@ export const deleteCurrencyController = async (req: Request, res: Response) => {
     if (changes === 0) {
       return res.status(404).json({ message: 'Currency not found.' });
     }
-    res.status(204).json({ message: 'Currency deleted.' });
+    res.status(204).end();
   } catch {
     res.status(400).json({ message: 'Bad delete currency request.' });
   }
