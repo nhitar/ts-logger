@@ -22,10 +22,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  access_token:
-                    type: string
+                $ref: '#/components/schemas/AuthResponse'
         '401':
           description: Неверная почта или пароль
         '500':
@@ -53,6 +50,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Currency'
+        '400':
+          description: Неверные данные
 
     post:
       summary: Создание валюты
@@ -92,6 +91,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Currency'
+        '400':
+          description: Неверные данные
         '404':
           description: Валюта не найдена
 
@@ -159,6 +160,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExternalCurrency'
+        '400':
+          description: Тикер не указан
         '422':
           description: Неверный формат полученных данных
         '503':
@@ -178,6 +181,19 @@ components:
         email:
           type: string
         password:
+          type: string
+    
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: number
+            email:
+              type: string
+        token:
           type: string
 
     Currency:
