@@ -44,6 +44,7 @@ export class Database {
 
   async initDatabase() {
     try {
+      await this.run('BEGIN TRANSACTION');
       await this.run(`
         CREATE TABLE IF NOT EXISTS currencies (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,6 +59,7 @@ export class Database {
         console.log(
           'Database already initialized with data. Skipping seeding.',
         );
+        await this.run('COMMIT');
         return;
       }
 
@@ -67,10 +69,11 @@ export class Database {
           [`Currency ${i}`, `TICKER-${i}`, 1.0 * i],
         );
       }
-      console.log(await this.all(`SELECT * FROM currencies`, []));
-      console.log('Database initialized and seeded.');
+      console.log('Database initialized and seeded with 10 currencies.');
+      await this.run('COMMIT');
     } catch (error) {
       console.error('Error initializing database:', error);
+      await this.run('ROLLBACK');
       this.db.close();
     }
   }
