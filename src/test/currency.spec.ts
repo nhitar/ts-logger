@@ -1,11 +1,12 @@
 import request from 'supertest';
 
+import { CurrencyWithId } from '../common/interfaces/currencyInterface';
 import { app, databaseReady, server } from '../main';
 
 describe('CurrencyService', () => {
   let authToken = '';
-  let allCurrencies: any[] = [];
-  let databaseDump: any[] = [];
+  let allCurrencies: CurrencyWithId[] = [];
+  let databaseDump: CurrencyWithId[] = [];
 
   const currencies = [
     {
@@ -99,7 +100,7 @@ describe('CurrencyService', () => {
     );
 
     const response = await request(app)
-      .get(`/currencies/${targetCurrency.id}`)
+      .get(`/currencies/${targetCurrency!.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.body).toEqual(
@@ -144,7 +145,7 @@ describe('CurrencyService', () => {
 
     const updatedCurrency = { name: 'ticker-1', ticker: 'ABC', price: 100 };
     const response = await request(app)
-      .put(`/currencies/${targetCurrency.id}`)
+      .put(`/currencies/${targetCurrency!.id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedCurrency);
 
@@ -156,7 +157,7 @@ describe('CurrencyService', () => {
     expect(response.statusCode).toBe(200);
 
     const updated = await request(app)
-      .get(`/currencies/${targetCurrency.id}`)
+      .get(`/currencies/${targetCurrency!.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(updated.body).toEqual(
@@ -170,13 +171,13 @@ describe('CurrencyService', () => {
     );
 
     const response = await request(app)
-      .delete(`/currencies/${targetCurrency.id}`)
+      .delete(`/currencies/${targetCurrency!.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.statusCode).toBe(204);
 
     const deleted = await request(app)
-      .get(`/currencies/${targetCurrency.id}`)
+      .get(`/currencies/${targetCurrency!.id}`)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(deleted.statusCode).toBe(404);

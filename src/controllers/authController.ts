@@ -27,10 +27,11 @@ export const login = async (req: Request, res: Response) => {
         .json({ message: 'Email or password is incorrect.' });
     }
 
-    const { hash, ...safeUser } = user;
-
     res.json({
-      user: { ...safeUser },
+      user: {
+        id: user.id,
+        email: user.email,
+      },
       token: generateToken(user.id),
     });
   } catch (error) {
