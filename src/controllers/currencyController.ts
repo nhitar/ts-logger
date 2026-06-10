@@ -5,6 +5,7 @@ import { ExternalApiFieldsError } from '../common/errors/externalApiFieldsError'
 import {
   Currency,
   CurrencyWithId,
+  ExternalCurrency,
 } from '../common/interfaces/currencyInterface';
 import { log } from '../core/logger';
 import * as currencyService from '../services/currencyService';
@@ -94,8 +95,7 @@ const getCurrencyPrices = async () => {
         `https://api.binance.com/api/v3/ticker/price`,
         { timeout: 3000 },
       );
-      const data = response.data;
-      return data;
+      return response.data;
     } catch (error) {
       log('WARN', `Error while accessing external API. Attempt: ${attempt}.`);
       if (error instanceof ExternalApiFieldsError) {
@@ -111,18 +111,18 @@ const getCurrencyPrices = async () => {
 
 export const updateCurrencyPrices = async () => {
   try {
-    const currencyPrices: [] = await getCurrencyPrices();
+    const currencyPrices: ExternalCurrency[] = await getCurrencyPrices();
     const currencies: CurrencyWithId[] =
       await currencyService.getAllCurrencies();
     for (const currency of currencies) {
       const externalTicker = currencyPrices.find(
-        (ticker) => ticker['symbol'] === currency.ticker,
+        (ticker) => ticker.symbol === currency.ticker,
       );
       if (externalTicker) {
         await currencyService.updateCurrency(currency.id, {
           name: currency.name,
           ticker: currency.ticker,
-          price: Number(externalTicker['price']),
+          price: Number(externalTicker.price),
         });
       }
     }

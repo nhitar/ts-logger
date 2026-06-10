@@ -7,3 +7,8 @@ export interface Currency {
 export interface CurrencyWithId extends Currency {
   id: number;
 }
+
+export interface ExternalCurrency {
+  symbol: string;
+  price: number;
+}
