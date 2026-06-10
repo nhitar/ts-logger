@@ -144,7 +144,7 @@ paths:
 
   /price:
     get:
-      summary: Получение цены валюты от внешнего API
+      summary: Получение цены валют по тикеру
       security:
         - bearerAuth: []
       parameters:
@@ -155,17 +155,17 @@ paths:
            type: string
       responses:
         '200':
-          description: Данные валюты
+          description: Данные валют
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExternalCurrency'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
         '400':
           description: Тикер не указан
-        '422':
-          description: Неверный формат полученных данных
-        '503':
-          description: Внешний API недоступен
+        '404':
+          description: Нет данных по данному тикеру
 
 components:
   securitySchemes:
