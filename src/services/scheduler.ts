@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 
 import { IntervalError } from '../common/errors/intervalError';
 import { TaskNameError } from '../common/errors/taskNameError';
+import { updateCurrencyPrices } from '../controllers/currencyController';
 import { config } from '../core/config';
 import { log } from '../core/logger';
 
@@ -18,16 +19,11 @@ export function scheduleTask(name: string, interval: number, task: Function) {
   return setInterval(task, interval);
 }
 
-function runScheduler() {
+export function runScheduler() {
   log('INFO', 'Scheduler started.');
-  scheduleTask(
-    'run logger',
-    config.intervalMsec,
-    (() => {
-      const requestId = randomUUID();
-      return () => {
-        log('INFO', 'Running.', requestId);
-      };
-    })(),
+  const intervalTasks = [];
+  intervalTasks.push(
+    scheduleTask('update prices', config.intervalMsec, updateCurrencyPrices),
   );
+  return intervalTasks;
 }
