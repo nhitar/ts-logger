@@ -3,3 +3,7 @@ export interface Currency {
   ticker: string;
   price: number;
 }
+
+export interface CurrencyWithId extends Currency {
+  id: number;
+}

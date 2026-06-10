@@ -40,7 +40,7 @@ router.delete(
 router.get(
   '/price',
   authMiddleware,
-  currencyController.getTickerPriceController,
+  currencyController.getTickerPricesController,
 );
 
 export default router;

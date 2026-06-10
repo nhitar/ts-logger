@@ -1,19 +1,25 @@
-import { Currency } from '../common/interfaces/currencyInterface';
+import {
+  Currency,
+  CurrencyWithId,
+} from '../common/interfaces/currencyInterface';
 import { DatabaseResponse } from '../common/interfaces/databaseResponseInterface';
 import database from '../database/database';
 
 export const getAllCurrencies = async () => {
-  return await database.all('SELECT * FROM currencies', []);
+  return (await database.all(
+    'SELECT * FROM currencies',
+    [],
+  )) as CurrencyWithId[];
+};
+
+export const getCurrenciesByTicker = async (ticker: string) => {
+  return (await database.all('SELECT * FROM currencies WHERE ticker = ?', [
+    ticker,
+  ])) as CurrencyWithId[];
 };
 
 export const getCurrencyById = async (id: number) => {
   return await database.get('SELECT * FROM currencies WHERE id = ?', [id]);
-};
-
-export const getCurrencyByTicker = async (ticker: string) => {
-  return await database.get('SELECT * FROM currencies WHERE ticker = ?', [
-    ticker,
-  ]);
 };
 
 export const createCurrency = async (currency: Currency) => {
