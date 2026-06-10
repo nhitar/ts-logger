@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'test') {
   process.on('SIGINT', () => {
     log('INFO', 'Received SIGINT.');
     intervalTasks.forEach((id) => clearInterval(id));
-    console.log('Scheduler stopped.');
+    log('INFO', 'Scheduler stopped.');
     server.close();
   });
 }
