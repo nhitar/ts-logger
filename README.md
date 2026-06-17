@@ -75,9 +75,13 @@ npm test
 ```
 docker build . -t currency-image
 
-docker run --rm -d --name currency-container currency-image
+docker run --rm --name currency-container -p 3000:3000 currency-image
+```
 
-docker logs currency-container
+Для запуска тестов можно убрать порт и переопределить аргумент `CMD`:
+
+```
+docker run --rm --name currency-container currency-image test
 ```
 
 ### OpenAPI
