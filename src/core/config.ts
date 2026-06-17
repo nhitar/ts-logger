@@ -1,4 +1,4 @@
 export const config = {
-  appName: 'js-logger',
+  appName: 'ts-currency',
   intervalMsec: 1000,
 };
