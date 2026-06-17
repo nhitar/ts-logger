@@ -52,11 +52,9 @@ export const getCurrencyHistoryController = async (
     res.status(200).json(history);
   } catch (error) {
     const errorMessage = (error as Error).message;
-    res
-      .status(400)
-      .json({
-        message: `Bad get currency history request: '${errorMessage}'.`,
-      });
+    res.status(400).json({
+      message: `Bad get currency history request: '${errorMessage}'.`,
+    });
   }
 };
 
