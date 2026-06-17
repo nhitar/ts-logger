@@ -36,6 +36,19 @@ export const getCurrencyByIdController = async (
   }
 };
 
+export const getCurrencyHistoryController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const currencyId = Number(req.params.id);
+    const history = await currencyService.getCurrencyHistory(currencyId);
+    res.status(200).json(history);
+  } catch {
+    res.status(400).json({ message: 'Bad get currency history request.' });
+  }
+};
+
 export const createCurrencyController = async (req: Request, res: Response) => {
   try {
     const newCurrency: Currency = {
@@ -44,11 +57,20 @@ export const createCurrencyController = async (req: Request, res: Response) => {
       price: Number(req.body.price),
     };
 
+    const currencies: CurrencyWithId[] =
+      await currencyService.getAllCurrencies();
+    if (currencies.find((currency) => currency.ticker === newCurrency.ticker)) {
+      return res
+        .status(409)
+        .json({ message: 'Currency with this ticker already exists.' });
+    }
+
     const id = await currencyService.createCurrency(newCurrency);
     const currency = await currencyService.getCurrencyById(id);
     if (currency === undefined) {
       return res.status(404).json({ message: 'Currency not found.' });
     }
+
     res.status(201).json(currency);
   } catch {
     res.status(400).json({ message: 'Bad request for currency create.' });
@@ -69,6 +91,8 @@ export const updateCurrencyController = async (req: Request, res: Response) => {
     if (changes === 0 || currency === undefined) {
       return res.status(404).json({ message: 'Currency not found.' });
     }
+
+    await currencyService.savePrice(id, updatedCurrency.price);
     res.status(200).json(currency);
   } catch {
     res.status(400).json({ message: 'Bad request for update currency.' });
@@ -119,6 +143,10 @@ export const updateCurrencyPrices = async () => {
         (ticker) => ticker.symbol === currency.ticker,
       );
       if (externalTicker) {
+        await currencyService.savePrice(
+          currency.id,
+          Number(externalTicker.price),
+        );
         await currencyService.updateCurrency(currency.id, {
           name: currency.name,
           ticker: currency.ticker,

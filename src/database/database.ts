@@ -60,6 +60,31 @@ export class Database {
         )
       `);
 
+      await this.run(`
+        CREATE TABLE IF NOT EXISTS currency_histories (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          currency_id INTEGER NOT NULL,
+          price REAL NOT NULL,
+          timestamp DATETIME NOT NULL
+        )
+      `);
+
+      await this.run(`
+        CREATE TABLE IF NOT EXISTS wallets (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          address TEXT NOT NULL UNIQUE
+        )
+      `);
+
+      await this.run(`
+        CREATE TABLE IF NOT EXISTS wallet_balances (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          wallet_id INTEGER NOT NULL,
+          currency_id INTEGER NOT NULL,
+          balance REAL NOT NULL
+        )
+      `);
+
       const isEmpty = await this.get(`SELECT * FROM currencies LIMIT 1`, []);
       if (isEmpty !== undefined) {
         log(

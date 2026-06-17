@@ -18,6 +18,13 @@ export const getCurrenciesByTicker = async (ticker: string) => {
   ])) as CurrencyWithId[];
 };
 
+export const getCurrencyHistory = async (currencyId: number) => {
+  return await database.all(
+    'SELECT * FROM currency_histories WHERE currency_id = ? ORDER BY timestamp DESC',
+    [currencyId],
+  );
+};
+
 export const getCurrencyById = async (id: number) => {
   return await database.get('SELECT * FROM currencies WHERE id = ?', [id]);
 };
@@ -26,6 +33,14 @@ export const createCurrency = async (currency: Currency) => {
   const response: DatabaseResponse = await database.run(
     'INSERT INTO currencies (name, ticker, price) VALUES (?, ?, ?)',
     [currency.name, currency.ticker, currency.price],
+  );
+  return response.lastID;
+};
+
+export const savePrice = async (currencyId: number, price: number) => {
+  const response: DatabaseResponse = await database.run(
+    'INSERT INTO currency_histories (currency_id, price, timestamp) VALUES (?, ?, ?)',
+    [currencyId, price, new Date()],
   );
   return response.lastID;
 };
