@@ -25,6 +25,13 @@ export const getCurrencyHistory = async (currencyId: number) => {
   );
 };
 
+export const getCurrenciesHistory = async () => {
+  return await database.all(
+    'SELECT * FROM currency_histories ORDER BY timestamp DESC',
+    [],
+  );
+};
+
 export const getCurrencyById = async (id: number) => {
   return await database.get('SELECT * FROM currencies WHERE id = ?', [id]);
 };

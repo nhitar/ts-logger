@@ -35,6 +35,13 @@ paths:
       responses:
         '200':
           description: Сервер доступен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
 
   /currencies:
     get:
@@ -164,6 +171,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CurrencyHistory'
+        '400':
+          description: Неверные данные
+  
+  /currencies/height:
+    get:
+      summary: Получение высоты блокчейна
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Высота блокчейна
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  height:
+                    type: integer
         '400':
           description: Неверные данные
 

@@ -58,6 +58,21 @@ export const getCurrencyHistoryController = async (
   }
 };
 
+export const getBlockchainHeightController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const history = await currencyService.getCurrenciesHistory();
+    res.status(200).json({ height: history.length });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res.status(400).json({
+      message: `Bad request for get blockchain height: '${errorMessage}'.`,
+    });
+  }
+};
+
 export const createCurrencyController = async (req: Request, res: Response) => {
   try {
     const newCurrency: Currency = {

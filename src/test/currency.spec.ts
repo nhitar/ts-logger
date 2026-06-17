@@ -94,6 +94,16 @@ describe('CurrencyService', () => {
     expect(response.statusCode).toBe(200);
   });
 
+  it('should return blockchain height', async () => {
+    const response = await request(app)
+      .get('/currencies/height')
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.body).toHaveProperty('height');
+    expect(Number(response.body.height)).toBeGreaterThan(0);
+    expect(response.statusCode).toBe(200);
+  });
+
   it('should return currency by id', async () => {
     const targetCurrency = allCurrencies.find(
       (currency: { ticker: string }) => currency.ticker === 'ABC',

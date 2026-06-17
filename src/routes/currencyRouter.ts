@@ -12,6 +12,12 @@ currencyRouter.get(
 );
 
 currencyRouter.get(
+  '/height',
+  authMiddleware,
+  currencyController.getBlockchainHeightController,
+);
+
+currencyRouter.get(
   '/:id',
   authMiddleware,
   currencyController.getCurrencyByIdController,
