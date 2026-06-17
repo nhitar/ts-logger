@@ -52,6 +52,16 @@ npm run start
 npm run test
 ```
 
+Запуск через `Dockerfile`:
+
+```
+docker build . -t currency-image
+
+docker run --rm -d --name currency-container currency-image
+
+docker logs currency-container
+```
+
 ### Отладочные пользователи
 
 Авторизация осуществляется через `POST /auth/login`.
