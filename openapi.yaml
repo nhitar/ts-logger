@@ -232,6 +232,28 @@ paths:
           description: Кошелёк с таким адресом уже существует
 
   /wallets/{id}:
+    get:
+      summary: Получение одного кошелька
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Данные кошелька
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '400':
+          description: Неверные данные
+        '404':
+          description: Кошелёк не найден
+
     put:
       summary: Обновление адреса кошелька
       security:
@@ -273,6 +295,31 @@ paths:
       responses:
         '204':
           description: Кошелёк удален
+        '400':
+          description: Неверные данные
+        '404':
+          description: Кошелёк не найден
+
+  /wallets/{id}/currencies:
+    get:
+      summary: Получение баланса кошелька
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Баланс кошелька
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WalletBalance'
         '400':
           description: Неверные данные
         '404':

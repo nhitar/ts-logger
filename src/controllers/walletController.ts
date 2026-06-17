@@ -18,6 +18,43 @@ export const getAllWalletsController = async (_: Request, res: Response) => {
   }
 };
 
+export const getWalletByIdController = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const wallet = await walletService.getWalletById(id);
+    if (wallet === undefined) {
+      return res.status(404).json({ message: 'Wallet not found.' });
+    }
+    res.status(200).json(wallet);
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad get wallet by id request: '${errorMessage}'.` });
+  }
+};
+
+export const getWalletCurrenciesController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const walletId = Number(req.params.id);
+    const currencies = await walletService.getBalanceByWalletId(walletId);
+    if (currencies === undefined) {
+      return res.status(404).json({ message: 'Wallet not found.' });
+    }
+    res.status(200).json(currencies);
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({
+        message: `Bad get wallet currencies request: '${errorMessage}'.`,
+      });
+  }
+};
+
 export const createWalletController = async (req: Request, res: Response) => {
   try {
     const wallets: WalletWithId[] = await walletService.getAllWallets();
@@ -67,7 +104,7 @@ export const buyCurrencyController = async (req: Request, res: Response) => {
     const currencyId = Number(req.body.currencyId);
     const amount = Number(req.body.amount);
     const walletCurrencies: WalletBalanceWithId[] =
-      await walletService.getBalancesByWalletId(walletId);
+      await walletService.getBalanceByWalletId(walletId);
     if (walletCurrencies === undefined) {
       return res.status(404).json({ message: 'Wallet not found.' });
     }
@@ -85,7 +122,7 @@ export const buyCurrencyController = async (req: Request, res: Response) => {
       await walletService.buyCurrency(walletId, currencyId, amount);
     }
 
-    const updatedBalance = await walletService.getBalancesByWalletId(walletId);
+    const updatedBalance = await walletService.getBalanceByWalletId(walletId);
     res.status(200).json(updatedBalance);
   } catch (error) {
     const errorMessage = (error as Error).message;

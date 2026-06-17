@@ -9,17 +9,17 @@ export const getAllWallets = async () => {
   return (await database.all('SELECT * FROM wallets', [])) as WalletWithId[];
 };
 
-export const getBalancesByWalletId = async (walletId: number) => {
-  return (await database.all(
-    'SELECT * FROM wallet_currencies WHERE wallet_id = ?',
-    [walletId],
-  )) as WalletBalanceWithId[];
-};
-
 export const getWalletById = async (id: number) => {
   return (await database.get('SELECT * FROM wallets WHERE id = ?', [
     id,
   ])) as WalletWithId;
+};
+
+export const getBalanceByWalletId = async (walletId: number) => {
+  return (await database.all(
+    'SELECT * FROM wallet_currencies WHERE wallet_id = ?',
+    [walletId],
+  )) as WalletBalanceWithId[];
 };
 
 export const createWallet = async (address: string) => {

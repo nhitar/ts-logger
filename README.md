@@ -62,6 +62,12 @@ docker run --rm -d --name currency-container currency-image
 docker logs currency-container
 ```
 
+### OpenAPI
+
+`Swagger UI` доступен по эндпоинту:
+
+`http://localhost:3000/api-docs`
+
 ### Отладочные пользователи
 
 Авторизация осуществляется через `POST /auth/login`.

@@ -100,8 +100,25 @@ export class Database {
           `INSERT INTO currencies (name, ticker, price) VALUES (?, ?, ?)`,
           [`Currency ${i}`, `TICKER-${i}`, 1.0 * i],
         );
+
+        await this.run(
+          `INSERT INTO currency_histories (currency_id, price, timestamp) VALUES (?, ?, ?)`,
+          [i, 1.0 * i, new Date()],
+        );
+
+        await this.run(`INSERT INTO wallets (address) VALUES (?)`, [
+          `ABC-${i}`,
+        ]);
+
+        await this.run(
+          `INSERT INTO wallet_currencies (wallet_id, currency_id, amount) VALUES (?, ?, ?)`,
+          [i, i, 1.0 * i],
+        );
       }
-      log('INFO', 'Database initialized and seeded with 10 currencies.');
+      log(
+        'INFO',
+        'Database initialized and seeded with 10 instances of each table.',
+      );
       await this.run('COMMIT');
     } catch (error) {
       log('ERROR', `Error initializing database: ${error}`);

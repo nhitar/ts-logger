@@ -7,6 +7,18 @@ const walletRouter = express.Router();
 
 walletRouter.get('/', authMiddleware, walletController.getAllWalletsController);
 
+walletRouter.get(
+  '/:id',
+  authMiddleware,
+  walletController.getWalletByIdController,
+);
+
+walletRouter.get(
+  '/:id/currencies',
+  authMiddleware,
+  walletController.getWalletCurrenciesController,
+);
+
 walletRouter.post('/', authMiddleware, walletController.createWalletController);
 
 walletRouter.put(
