@@ -42,40 +42,6 @@ export const createWalletController = async (req: Request, res: Response) => {
   }
 };
 
-export const buyCurrencyController = async (req: Request, res: Response) => {
-  try {
-    const walletId = Number(req.params.id);
-    const currencyId = Number(req.body.currencyId);
-    const balance = Number(req.body.balance);
-    const walletBalances: WalletBalanceWithId[] =
-      await walletService.getBalancesByWalletId(walletId);
-    if (walletBalances === undefined) {
-      return res.status(404).json({ message: 'Wallet not found.' });
-    }
-
-    const existingBalance = walletBalances.find(
-      (balance) => balance.currency_id === currencyId,
-    );
-    if (existingBalance) {
-      await walletService.updateWalletBalance(
-        walletId,
-        currencyId,
-        existingBalance.balance + balance,
-      );
-    } else {
-      await walletService.buyCurrency(walletId, currencyId, balance);
-    }
-
-    const updatedBalance = await walletService.getBalancesByWalletId(walletId);
-    res.status(200).json(updatedBalance);
-  } catch (error) {
-    const errorMessage = (error as Error).message;
-    res
-      .status(400)
-      .json({ message: `Bad request for buy currency: '${errorMessage}'.` });
-  }
-};
-
 export const updateWalletController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
@@ -92,6 +58,40 @@ export const updateWalletController = async (req: Request, res: Response) => {
     res
       .status(400)
       .json({ message: `Bad request for update wallet: '${errorMessage}'.` });
+  }
+};
+
+export const buyCurrencyController = async (req: Request, res: Response) => {
+  try {
+    const walletId = Number(req.params.id);
+    const currencyId = Number(req.body.currencyId);
+    const amount = Number(req.body.amount);
+    const walletCurrencies: WalletBalanceWithId[] =
+      await walletService.getBalancesByWalletId(walletId);
+    if (walletCurrencies === undefined) {
+      return res.status(404).json({ message: 'Wallet not found.' });
+    }
+
+    const existingCurrencies = walletCurrencies.find(
+      (balance) => balance.currency_id === currencyId,
+    );
+    if (existingCurrencies) {
+      await walletService.updateWalletBalance(
+        walletId,
+        currencyId,
+        existingCurrencies.amount + amount,
+      );
+    } else {
+      await walletService.buyCurrency(walletId, currencyId, amount);
+    }
+
+    const updatedBalance = await walletService.getBalancesByWalletId(walletId);
+    res.status(200).json(updatedBalance);
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for buy currency: '${errorMessage}'.` });
   }
 };
 

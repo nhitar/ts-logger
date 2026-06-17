@@ -8,16 +8,19 @@ const walletRouter = express.Router();
 walletRouter.get('/', authMiddleware, walletController.getAllWalletsController);
 
 walletRouter.post('/', authMiddleware, walletController.createWalletController);
-walletRouter.post(
-  '/:id/buy',
-  authMiddleware,
-  walletController.buyCurrencyController,
-);
+
 walletRouter.put(
   '/:id',
   authMiddleware,
   walletController.updateWalletController,
 );
+
+walletRouter.put(
+  '/:id/buy',
+  authMiddleware,
+  walletController.buyCurrencyController,
+);
+
 walletRouter.delete(
   '/:id',
   authMiddleware,

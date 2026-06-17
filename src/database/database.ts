@@ -77,11 +77,11 @@ export class Database {
       `);
 
       await this.run(`
-        CREATE TABLE IF NOT EXISTS wallet_balances (
+        CREATE TABLE IF NOT EXISTS wallet_currencies (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           wallet_id INTEGER NOT NULL,
           currency_id INTEGER NOT NULL,
-          balance REAL NOT NULL
+          amount REAL NOT NULL
         )
       `);
 
