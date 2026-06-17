@@ -106,9 +106,7 @@ export const updateWalletBalanceController = async (
     const currencyId = Number(req.body.currencyId);
     const amount = Number(req.body.amount);
     if (amount <= 0) {
-      return res
-        .status(400)
-        .json({ message: 'Amount should be positive.' });
+      return res.status(400).json({ message: 'Amount should be positive.' });
     }
 
     const wallet = await walletService.getWalletById(walletId);

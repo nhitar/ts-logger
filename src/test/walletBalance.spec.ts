@@ -211,9 +211,7 @@ describe('WalletService', () => {
       .send({ currencyId: targetCurrency!.id, amount: -1 });
 
     expect(response.body).toHaveProperty('message');
-    expect(response.body.message).toContain(
-      'Amount should be a positive number.',
-    );
+    expect(response.body.message).toContain('Amount should be positive.');
     expect(response.statusCode).toBe(400);
   });
 
