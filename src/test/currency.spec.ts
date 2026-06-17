@@ -157,6 +157,20 @@ describe('CurrencyService', () => {
     );
   });
 
+  it('should return conflict code on create currency', async () => {
+    const newCurrency = { name: 'ticker-1', ticker: 'ABC', price: 10 };
+    const response = await request(app)
+      .post('/currencies')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(newCurrency);
+
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toContain(
+      'Currency with this ticker already exists.',
+    );
+    expect(response.statusCode).toBe(409);
+  });
+
   it('should not create currency', async () => {
     const newCurrency = { name: 'ticker-3', ticker: 'GHI' };
     const response = await request(app)

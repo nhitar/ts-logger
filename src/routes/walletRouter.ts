@@ -28,9 +28,9 @@ walletRouter.put(
 );
 
 walletRouter.put(
-  '/:id/buy',
+  '/:id/balance',
   authMiddleware,
-  walletController.buyCurrencyController,
+  walletController.updateWalletBalanceController,
 );
 
 walletRouter.delete(

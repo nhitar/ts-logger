@@ -139,7 +139,7 @@ describe('WalletService', () => {
     );
 
     await request(app)
-      .put(`/wallets/${targetWallet!.id}/buy`)
+      .put(`/wallets/${targetWallet!.id}/balance`)
       .set('Authorization', `Bearer ${authToken}`)
       .send({ currencyId: targetCurrency!.id, amount: 10 });
 
@@ -171,7 +171,7 @@ describe('WalletService', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  it('should buy currency', async () => {
+  it('should update wallet balance', async () => {
     const targetCurrency = allCurrencies.find(
       (currency) => currency.ticker === 'ABC',
     );
@@ -181,7 +181,7 @@ describe('WalletService', () => {
     );
 
     const response = await request(app)
-      .put(`/wallets/${targetWallet!.id}/buy`)
+      .put(`/wallets/${targetWallet!.id}/balance`)
       .set('Authorization', `Bearer ${authToken}`)
       .send({ currencyId: targetCurrency!.id, amount: 10 });
 
@@ -196,7 +196,7 @@ describe('WalletService', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  it('should not buy currency', async () => {
+  it('should not update wallet balance', async () => {
     const targetCurrency = allCurrencies.find(
       (currency) => currency.ticker === 'ABC',
     );
@@ -206,7 +206,7 @@ describe('WalletService', () => {
     );
 
     const response = await request(app)
-      .put(`/wallets/${targetWallet!.id}/buy`)
+      .put(`/wallets/${targetWallet!.id}/balance`)
       .set('Authorization', `Bearer ${authToken}`)
       .send({ currencyId: targetCurrency!.id, amount: -1 });
 

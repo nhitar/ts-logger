@@ -137,7 +137,7 @@ describe('WalletService', () => {
     );
   });
 
-  it('should not create wallet', async () => {
+  it('should return conflict code on create wallet', async () => {
     const newWallet = { address: 'ABC123' };
     const response = await request(app)
       .post('/wallets')
@@ -149,6 +149,18 @@ describe('WalletService', () => {
       'Wallet with this address already exists.',
     );
     expect(response.statusCode).toBe(409);
+  });
+
+  it('should not create wallet', async () => {
+    const newWallet = {};
+    const response = await request(app)
+      .post('/wallets')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(newWallet);
+
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toContain('Bad request for wallet create');
+    expect(response.statusCode).toBe(400);
   });
 
   it('should update wallet', async () => {

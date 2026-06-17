@@ -96,7 +96,10 @@ export const updateWalletController = async (req: Request, res: Response) => {
   }
 };
 
-export const buyCurrencyController = async (req: Request, res: Response) => {
+export const updateWalletBalanceController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const walletId = Number(req.params.id);
     const currencyId = Number(req.body.currencyId);
@@ -132,7 +135,9 @@ export const buyCurrencyController = async (req: Request, res: Response) => {
     const errorMessage = (error as Error).message;
     res
       .status(400)
-      .json({ message: `Bad request for buy currency: '${errorMessage}'.` });
+      .json({
+        message: `Bad request for update wallet balance: '${errorMessage}'.`,
+      });
   }
 };
 
