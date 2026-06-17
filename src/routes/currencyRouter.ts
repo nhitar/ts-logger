@@ -1,46 +1,49 @@
 import express from 'express';
 
-import * as authController from '../controllers/authController';
 import * as currencyController from '../controllers/currencyController';
 import * as statusController from '../controllers/statusController';
 import { authMiddleware } from '../middleware/authMiddleware';
 
-const router = express.Router();
+const currencyRouter = express.Router();
 
-router.post('/auth/login', authController.login);
+currencyRouter.get('/status', statusController.getStatusController);
 
-router.get('/status', statusController.getStatusController);
-
-router.get(
-  '/currencies',
+currencyRouter.get(
+  '/',
   authMiddleware,
   currencyController.getAllCurrenciesController,
 );
-router.get(
-  '/currencies/:id',
+currencyRouter.get(
+  '/:id',
   authMiddleware,
   currencyController.getCurrencyByIdController,
 );
-router.post(
-  '/currencies',
+currencyRouter.get(
+  '/:id/history',
+  authMiddleware,
+  currencyController.getCurrencyHistoryController,
+);
+
+currencyRouter.post(
+  '/',
   authMiddleware,
   currencyController.createCurrencyController,
 );
-router.put(
-  '/currencies/:id',
+currencyRouter.put(
+  '/:id',
   authMiddleware,
   currencyController.updateCurrencyController,
 );
-router.delete(
-  '/currencies/:id',
+currencyRouter.delete(
+  '/:id',
   authMiddleware,
   currencyController.deleteCurrencyController,
 );
 
-router.get(
+currencyRouter.get(
   '/price',
   authMiddleware,
   currencyController.getTickerPricesController,
 );
 
-export default router;
+export default currencyRouter;
