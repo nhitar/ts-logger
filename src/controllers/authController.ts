@@ -35,6 +35,9 @@ export const login = async (req: Request, res: Response) => {
       token: generateToken(user.id),
     });
   } catch (error) {
-    res.status(500).json({ message: error });
+    const errorMessage = (error as Error).message;
+    res
+      .status(500)
+      .json({ message: `Internal server error: '${errorMessage}'.` });
   }
 };

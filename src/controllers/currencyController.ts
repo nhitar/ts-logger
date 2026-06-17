@@ -15,8 +15,11 @@ export const getAllCurrenciesController = async (_: Request, res: Response) => {
     const currencies: CurrencyWithId[] =
       await currencyService.getAllCurrencies();
     res.status(200).json(currencies);
-  } catch {
-    res.status(400).json({ message: 'Bad get currencies request.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad get currencies request: '${errorMessage}'.` });
   }
 };
 
@@ -31,8 +34,11 @@ export const getCurrencyByIdController = async (
       return res.status(404).json({ message: 'Currency not found.' });
     }
     res.status(200).json(currency);
-  } catch {
-    res.status(400).json({ message: 'Bad get currency by id request.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad get currency by id request: '${errorMessage}'.` });
   }
 };
 
@@ -44,8 +50,13 @@ export const getCurrencyHistoryController = async (
     const currencyId = Number(req.params.id);
     const history = await currencyService.getCurrencyHistory(currencyId);
     res.status(200).json(history);
-  } catch {
-    res.status(400).json({ message: 'Bad get currency history request.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({
+        message: `Bad get currency history request: '${errorMessage}'.`,
+      });
   }
 };
 
@@ -72,8 +83,11 @@ export const createCurrencyController = async (req: Request, res: Response) => {
     }
 
     res.status(201).json(currency);
-  } catch {
-    res.status(400).json({ message: 'Bad request for currency create.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for currency create: '${errorMessage}'.` });
   }
 };
 
@@ -94,8 +108,11 @@ export const updateCurrencyController = async (req: Request, res: Response) => {
 
     await currencyService.savePrice(id, updatedCurrency.price);
     res.status(200).json(currency);
-  } catch {
-    res.status(400).json({ message: 'Bad request for update currency.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for update currency: '${errorMessage}'.` });
   }
 };
 
@@ -107,8 +124,11 @@ export const deleteCurrencyController = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Currency not found.' });
     }
     res.status(204).end();
-  } catch {
-    res.status(400).json({ message: 'Bad delete currency request.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for delete currency: '${errorMessage}'.` });
   }
 };
 
@@ -126,7 +146,7 @@ const getCurrencyPrices = async () => {
         throw new ExternalApiFieldsError('Wrong format of parsed data.');
       }
       if (axios.isAxiosError(error)) {
-        log('WARN', `External API error: ${error}.`);
+        log('WARN', `External API error: '${error.message}'.`);
       }
     }
   }
@@ -155,7 +175,8 @@ export const updateCurrencyPrices = async () => {
       }
     }
   } catch (error) {
-    log('ERROR', `Error while updating currency prices: ${error}.`);
+    const errorMessage = (error as Error).message;
+    log('ERROR', `Error while updating currency prices: '${errorMessage}'.`);
   }
 };
 

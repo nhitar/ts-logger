@@ -10,8 +10,11 @@ export const getAllWalletsController = async (_: Request, res: Response) => {
   try {
     const wallets: WalletWithId[] = await walletService.getAllWallets();
     res.status(200).json(wallets);
-  } catch {
-    res.status(400).json({ message: 'Bad get wallets request.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad get wallets request: '${errorMessage}'.` });
   }
 };
 
@@ -31,8 +34,11 @@ export const createWalletController = async (req: Request, res: Response) => {
     }
 
     res.status(201).json(wallet);
-  } catch {
-    res.status(400).json({ message: 'Bad request for wallet create.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for wallet create: '${errorMessage}'.` });
   }
 };
 
@@ -62,8 +68,11 @@ export const buyCurrencyController = async (req: Request, res: Response) => {
 
     const updatedBalance = await walletService.getBalancesByWalletId(walletId);
     res.status(200).json(updatedBalance);
-  } catch {
-    res.status(400).json({ message: 'Bad request for buy currency.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for buy currency: '${errorMessage}'.` });
   }
 };
 
@@ -78,8 +87,11 @@ export const updateWalletController = async (req: Request, res: Response) => {
     }
 
     res.status(200).json(wallet);
-  } catch {
-    res.status(400).json({ message: 'Bad request for update wallet.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for update wallet: '${errorMessage}'.` });
   }
 };
 
@@ -91,7 +103,10 @@ export const deleteWalletController = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Wallet not found.' });
     }
     res.status(204).end();
-  } catch {
-    res.status(400).json({ message: 'Bad delete wallet request.' });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+    res
+      .status(400)
+      .json({ message: `Bad request for delete wallet: '${errorMessage}'.` });
   }
 };
