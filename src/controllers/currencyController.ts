@@ -81,6 +81,10 @@ export const createCurrencyController = async (req: Request, res: Response) => {
       price: Number(req.body.price),
     };
 
+    if (newCurrency.price <= 0) {
+      return res.status(400).json({ message: 'Price should be positive.' });
+    }
+
     const currencies: CurrencyWithId[] =
       await currencyService.getAllCurrencies();
     if (currencies.find((currency) => currency.ticker === newCurrency.ticker)) {

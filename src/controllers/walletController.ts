@@ -4,6 +4,7 @@ import {
   WalletBalanceWithId,
   WalletWithId,
 } from '../common/interfaces/walletInterface';
+import * as currencyService from '../services/currencyService';
 import * as walletService from '../services/walletService';
 
 export const getAllWalletsController = async (_: Request, res: Response) => {
@@ -107,24 +108,26 @@ export const updateWalletBalanceController = async (
     if (amount <= 0) {
       return res
         .status(400)
-        .json({ message: 'Amount should be a positive number.' });
+        .json({ message: 'Amount should be positive.' });
+    }
+
+    const wallet = await walletService.getWalletById(walletId);
+    if (wallet === undefined) {
+      return res.status(404).json({ message: 'Wallet not found.' });
     }
 
     const walletCurrencies: WalletBalanceWithId[] =
       await walletService.getBalanceByWalletId(walletId);
-    if (walletCurrencies === undefined) {
-      return res.status(404).json({ message: 'Wallet not found.' });
+    const currency = await currencyService.getCurrencyById(currencyId);
+    if (currency === undefined) {
+      return res.status(404).json({ message: 'Currency not found.' });
     }
 
-    const existingCurrencies = walletCurrencies.find(
+    const ownedCurrencies = walletCurrencies.find(
       (balance) => balance.currencyId === currencyId,
     );
-    if (existingCurrencies) {
-      await walletService.updateWalletBalance(
-        walletId,
-        currencyId,
-        existingCurrencies.amount + amount,
-      );
+    if (ownedCurrencies) {
+      await walletService.updateWalletBalance(walletId, currencyId, amount);
     } else {
       await walletService.buyCurrency(walletId, currencyId, amount);
     }
@@ -133,11 +136,9 @@ export const updateWalletBalanceController = async (
     res.status(200).json(updatedBalance);
   } catch (error) {
     const errorMessage = (error as Error).message;
-    res
-      .status(400)
-      .json({
-        message: `Bad request for update wallet balance: '${errorMessage}'.`,
-      });
+    res.status(400).json({
+      message: `Bad request for update wallet balance: '${errorMessage}'.`,
+    });
   }
 };
 

@@ -192,7 +192,7 @@ paths:
         '400':
           description: Неверные данные
 
-  /price:
+  /currencies/price:
     get:
       summary: Получение цены валют по тикеру
       security:
@@ -350,7 +350,7 @@ paths:
         '404':
           description: Кошелёк не найден
 
-  /wallets/{id}/buy:
+  /wallets/{id}/balance:
     put:
       summary: Покупка валюты
       security:
