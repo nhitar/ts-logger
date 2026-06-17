@@ -63,7 +63,7 @@ export class Database {
       await this.run(`
         CREATE TABLE IF NOT EXISTS currency_histories (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          currency_id INTEGER NOT NULL,
+          currencyId INTEGER NOT NULL,
           price REAL NOT NULL,
           timestamp DATETIME NOT NULL
         )
@@ -79,8 +79,8 @@ export class Database {
       await this.run(`
         CREATE TABLE IF NOT EXISTS wallet_currencies (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          wallet_id INTEGER NOT NULL,
-          currency_id INTEGER NOT NULL,
+          walletId INTEGER NOT NULL,
+          currencyId INTEGER NOT NULL,
           amount REAL NOT NULL
         )
       `);
@@ -102,7 +102,7 @@ export class Database {
         );
 
         await this.run(
-          `INSERT INTO currency_histories (currency_id, price, timestamp) VALUES (?, ?, ?)`,
+          `INSERT INTO currency_histories (currencyId, price, timestamp) VALUES (?, ?, ?)`,
           [i, 1.0 * i, new Date()],
         );
 
@@ -111,7 +111,7 @@ export class Database {
         ]);
 
         await this.run(
-          `INSERT INTO wallet_currencies (wallet_id, currency_id, amount) VALUES (?, ?, ?)`,
+          `INSERT INTO wallet_currencies (walletId, currencyId, amount) VALUES (?, ?, ?)`,
           [i, i, 1.0 * i],
         );
       }

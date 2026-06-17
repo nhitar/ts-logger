@@ -5,7 +5,7 @@ export interface WalletWithId {
 
 export interface WalletBalanceWithId {
   id: number;
-  wallet_id: number;
-  currency_id: number;
+  walletId: number;
+  currencyId: number;
   amount: number;
 }

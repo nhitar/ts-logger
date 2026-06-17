@@ -17,7 +17,7 @@ export const getWalletById = async (id: number) => {
 
 export const getBalanceByWalletId = async (walletId: number) => {
   return (await database.all(
-    'SELECT * FROM wallet_currencies WHERE wallet_id = ?',
+    'SELECT * FROM wallet_currencies WHERE walletId = ?',
     [walletId],
   )) as WalletBalanceWithId[];
 };
@@ -36,7 +36,7 @@ export const buyCurrency = async (
   balance: number,
 ) => {
   const response: DatabaseResponse = await database.run(
-    'INSERT INTO wallet_currencies (wallet_id, currency_id, amount) VALUES (?, ?, ?)',
+    'INSERT INTO wallet_currencies (walletId, currencyId, amount) VALUES (?, ?, ?)',
     [walletId, currencyId, balance],
   );
   return response.lastID;
@@ -56,7 +56,7 @@ export const updateWalletBalance = async (
   amount: number,
 ) => {
   const response: DatabaseResponse = await database.run(
-    'UPDATE wallet_currencies SET amount = ? WHERE wallet_id = ? AND currency_id = ?',
+    'UPDATE wallet_currencies SET amount = ? WHERE walletId = ? AND currencyId = ?',
     [amount, walletId, currencyId],
   );
   return response.changes;

@@ -113,6 +113,15 @@ describe('CurrencyService', () => {
     expect(response.statusCode).toBe(200);
   });
 
+  it('should not return currency by id', async () => {
+    const response = await request(app)
+      .get(`/currencies/${-1}`)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.body).toEqual({ message: 'Currency not found.' });
+    expect(response.statusCode).toBe(404);
+  });
+
   it('should create currency', async () => {
     const newCurrency = { name: 'ticker-3', ticker: 'GHI', price: 30 };
     const response = await request(app)
@@ -136,6 +145,18 @@ describe('CurrencyService', () => {
         expect.objectContaining({ name: 'ticker-3', ticker: 'GHI', price: 30 }),
       ]),
     );
+  });
+
+  it('should not create currency', async () => {
+    const newCurrency = { name: 'ticker-3', ticker: 'GHI' };
+    const response = await request(app)
+      .post('/currencies')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(newCurrency);
+
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toContain('Bad request for currency create');
+    expect(response.statusCode).toBe(400);
   });
 
   it('should update currency', async () => {
@@ -165,6 +186,22 @@ describe('CurrencyService', () => {
     );
   });
 
+  it('should not update currency', async () => {
+    const targetCurrency = allCurrencies.find(
+      (currency: { ticker: string }) => currency.ticker === 'ABC',
+    );
+
+    const updatedCurrency = { name: 'ticker-1', ticker: 'ABC' };
+    const response = await request(app)
+      .put(`/currencies/${targetCurrency!.id}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(updatedCurrency);
+
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toContain('Bad request for update currency');
+    expect(response.statusCode).toBe(400);
+  });
+
   it('should delete currency', async () => {
     const targetCurrency = allCurrencies.find(
       (currency: { ticker: string }) => currency.ticker === 'ABC',
@@ -181,6 +218,15 @@ describe('CurrencyService', () => {
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(deleted.statusCode).toBe(404);
+  });
+
+  it('should not delete currency', async () => {
+    const response = await request(app)
+      .delete(`/currencies/${-1}`)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.body).toEqual({ message: 'Currency not found.' });
+    expect(response.statusCode).toBe(404);
   });
 
   afterAll(async () => {

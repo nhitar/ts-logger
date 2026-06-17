@@ -47,11 +47,9 @@ export const getWalletCurrenciesController = async (
     res.status(200).json(currencies);
   } catch (error) {
     const errorMessage = (error as Error).message;
-    res
-      .status(400)
-      .json({
-        message: `Bad get wallet currencies request: '${errorMessage}'.`,
-      });
+    res.status(400).json({
+      message: `Bad get wallet currencies request: '${errorMessage}'.`,
+    });
   }
 };
 
@@ -103,6 +101,12 @@ export const buyCurrencyController = async (req: Request, res: Response) => {
     const walletId = Number(req.params.id);
     const currencyId = Number(req.body.currencyId);
     const amount = Number(req.body.amount);
+    if (amount <= 0) {
+      return res
+        .status(400)
+        .json({ message: 'Amount should be a positive number.' });
+    }
+
     const walletCurrencies: WalletBalanceWithId[] =
       await walletService.getBalanceByWalletId(walletId);
     if (walletCurrencies === undefined) {
@@ -110,7 +114,7 @@ export const buyCurrencyController = async (req: Request, res: Response) => {
     }
 
     const existingCurrencies = walletCurrencies.find(
-      (balance) => balance.currency_id === currencyId,
+      (balance) => balance.currencyId === currencyId,
     );
     if (existingCurrencies) {
       await walletService.updateWalletBalance(

@@ -20,7 +20,7 @@ export const getCurrenciesByTicker = async (ticker: string) => {
 
 export const getCurrencyHistory = async (currencyId: number) => {
   return await database.all(
-    'SELECT * FROM currency_histories WHERE currency_id = ? ORDER BY timestamp DESC',
+    'SELECT * FROM currency_histories WHERE currencyId = ? ORDER BY timestamp DESC',
     [currencyId],
   );
 };
@@ -39,7 +39,7 @@ export const createCurrency = async (currency: Currency) => {
 
 export const savePrice = async (currencyId: number, price: number) => {
   const response: DatabaseResponse = await database.run(
-    'INSERT INTO currency_histories (currency_id, price, timestamp) VALUES (?, ?, ?)',
+    'INSERT INTO currency_histories (currencyId, price, timestamp) VALUES (?, ?, ?)',
     [currencyId, price, new Date()],
   );
   return response.lastID;
