@@ -72,6 +72,8 @@ paths:
                 $ref: '#/components/schemas/Currency'
         '400':
           description: Неверные данные
+        '409':
+          description: Валюта с таким тикером уже существует
 
   /currencies/{id}:
     get:
@@ -123,7 +125,7 @@ paths:
           description: Неверные данные
         '404':
           description: Валюта не найдена
-    
+
     delete:
       summary: Удаление валюты
       security:
@@ -141,6 +143,29 @@ paths:
           description: Неверные данные
         '404':
           description: Валюта не найдена
+
+  /currencies/{id}/history:
+    get:
+      summary: Получение истории изменений цены валюты
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: История изменений цены валюты
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CurrencyHistory'
+        '400':
+          description: Неверные данные
 
   /price:
     get:
@@ -166,6 +191,120 @@ paths:
           description: Тикер не указан
         '404':
           description: Нет данных по данному тикеру
+
+  /wallets:
+    get:
+      summary: Список кошельков
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список кошельков
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wallet'
+        '400':
+          description: Неверные данные
+
+    post:
+      summary: Создание кошелька
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWallet'
+      responses:
+        '201':
+          description: Кошелёк создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '400':
+          description: Неверные данные
+        '409':
+          description: Кошелёк с таким адресом уже существует
+
+  /wallets/{id}:
+    put:
+      summary: Обновление адреса кошелька
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWallet'
+      responses:
+        '200':
+          description: Кошелёк обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '400':
+          description: Неверные данные
+        '404':
+          description: Кошелёк не найден
+
+    delete:
+      summary: Удаление кошелька
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Кошелёк удален
+        '400':
+          description: Неверные данные
+        '404':
+          description: Кошелёк не найден
+  
+  /wallets/{id}/buy:
+    put:
+      summary: Покупка валюты
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWalletBalance'
+      responses:
+        '200':
+          description: Валюта куплена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletBalance'
+        '400':
+          description: Неверные данные
+
 
 components:
   securitySchemes:
@@ -209,6 +348,39 @@ components:
         price:
           type: number
 
+    CurrencyHistory:
+      type: object
+      required: [id, currencyId, price, timestamp]
+      properties:
+        id:
+          type: number
+        currencyId:
+          type: number
+        price:
+          type: number
+        timestamp:
+          type: string
+
+    Wallet:
+      type: object
+      required: [id, address]
+      properties:
+        id:
+          type: number
+        address:
+          type: string
+    
+    WalletBalance:
+      type: object
+      required: [walletId, currencyId, amount]
+      properties:
+        walletId:
+          type: number
+        currencyId:
+          type: number
+        amount:
+          type: number
+
     ExternalCurrency:
       type: object
       required: [symbol, price]
@@ -237,4 +409,26 @@ components:
         ticker:
           type: string
         price:
+          type: number
+
+    CreateWallet:
+      type: object
+      required: [address]
+      properties:
+        address:
+          type: string
+
+    UpdateWallet:
+      type: object
+      properties:
+        address:
+          type: string
+
+    UpdateWalletBalance:
+      type: object
+      required: [currencyId, amount]
+      properties:
+        currencyId:
+          type: number
+        amount:
           type: number
