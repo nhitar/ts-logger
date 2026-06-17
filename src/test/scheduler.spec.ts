@@ -14,7 +14,7 @@ describe('Scheduler', () => {
     const interval = scheduleTask('run logger', 3000, taskSpy);
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[js-logger] INFO'),
+      expect.stringContaining('[ts-currency] INFO'),
     );
 
     expect(consoleSpy).toHaveBeenCalledWith(

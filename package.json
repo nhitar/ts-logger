@@ -1,7 +1,7 @@
 {
-  "name": "js-logger",
+  "name": "ts-currency",
   "version": "1.0.0",
-  "description": "JS logger app.",
+  "description": "TS currency app.",
   "license": "ISC",
   "scripts": {
     "start": "npx tsc && node dist/main.js",

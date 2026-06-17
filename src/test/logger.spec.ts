@@ -13,7 +13,7 @@ describe('Logger', () => {
     expect(consoleSpy).toHaveBeenCalled();
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[js-logger] INFO'),
+      expect.stringContaining('[ts-currency] INFO'),
     );
 
     expect(consoleSpy).toHaveBeenCalledWith(

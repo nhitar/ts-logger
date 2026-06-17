@@ -277,7 +277,7 @@ paths:
           description: Неверные данные
         '404':
           description: Кошелёк не найден
-  
+
   /wallets/{id}/buy:
     put:
       summary: Покупка валюты
@@ -321,7 +321,7 @@ components:
           type: string
         password:
           type: string
-    
+
     AuthResponse:
       type: object
       properties:
@@ -369,7 +369,7 @@ components:
           type: number
         address:
           type: string
-    
+
     WalletBalance:
       type: object
       required: [walletId, currencyId, amount]
