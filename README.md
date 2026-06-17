@@ -43,13 +43,13 @@ cd ts-logger
 ```bash
 npm i
 
-npm run start
+npm start
 ```
 
 Запуск тестов:
 
 ```bash
-npm run test
+npm test
 ```
 
 Запуск через `Dockerfile`:
